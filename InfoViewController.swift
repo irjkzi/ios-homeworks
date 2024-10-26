@@ -10,11 +10,17 @@ import UIKit
 class InfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemGray6
+        
+        // Устанавливаем мятный цвет фона
+        view.backgroundColor = UIColor.systemMint
 
         // Создаем кнопку для показа UIAlertController
         let alertButton = UIButton(type: .system)
         alertButton.setTitle("Show Alert", for: .normal)
+        alertButton.setTitleColor(.white, for: .normal)
+        alertButton.backgroundColor = .systemBlue
+        alertButton.layer.cornerRadius = 10
+        alertButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         alertButton.addTarget(self, action: #selector(showAlert), for: .touchUpInside)
         alertButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(alertButton)
@@ -22,7 +28,9 @@ class InfoViewController: UIViewController {
         // Устанавливаем ограничения для кнопки
         NSLayoutConstraint.activate([
             alertButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            alertButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            alertButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            alertButton.widthAnchor.constraint(equalToConstant: 150),
+            alertButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 

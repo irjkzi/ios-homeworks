@@ -14,13 +14,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        // Создаем окно
+        // Создаем окно для приложения
         window = UIWindow(windowScene: windowScene)
 
         // Создаем TabBarController
         let tabBarController = UITabBarController()
 
-        // Создаем FeedViewController и ProfileViewController
+        // Создаем контроллеры Feed и Profile
         let feedVC = FeedViewController()
         let profileVC = ProfileViewController()
 
@@ -28,9 +28,38 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let feedNavController = UINavigationController(rootViewController: feedVC)
         let profileNavController = UINavigationController(rootViewController: profileVC)
 
-        // Настраиваем Tab Bar Item
-        feedNavController.tabBarItem = UITabBarItem(title: "Feed", image: UIImage(systemName: "list.bullet"), tag: 0)
-        profileNavController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.circle"), tag: 1)
+        // Настраиваем Tab Bar Items для контроллеров
+        feedNavController.tabBarItem = UITabBarItem(
+            title: "Feed",
+            image: UIImage(systemName: "list.bullet"),
+            tag: 0
+        )
+        profileNavController.tabBarItem = UITabBarItem(
+            title: "Profile",
+            image: UIImage(systemName: "person.circle"),
+            tag: 1
+        )
+
+        // Настраиваем внешний вид TabBar
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.configureWithOpaqueBackground()
+        tabBarAppearance.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0) // Светло-серый фон
+
+        // Настраиваем цвета для активных и неактивных элементов
+        let activeColor = UIColor(red: 139/255, green: 0/255, blue: 0/255, alpha: 1.0) // Бордовый
+        let inactiveColor = UIColor(red: 105/255, green: 105/255, blue: 105/255, alpha: 1.0) // Темно-серый
+
+        // Устанавливаем цвет для неактивных и активных элементов
+        tabBarAppearance.stackedLayoutAppearance.normal.iconColor = inactiveColor
+        tabBarAppearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: inactiveColor]
+        tabBarAppearance.stackedLayoutAppearance.selected.iconColor = activeColor
+        tabBarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: activeColor]
+
+        // Применяем изменения к таб-бару
+        tabBarController.tabBar.standardAppearance = tabBarAppearance
+        if #available(iOS 15.0, *) {
+            tabBarController.tabBar.scrollEdgeAppearance = tabBarAppearance
+        }
 
         // Добавляем контроллеры в TabBarController
         tabBarController.viewControllers = [feedNavController, profileNavController]
@@ -40,6 +69,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
     }
 }
+
+
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

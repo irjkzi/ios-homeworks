@@ -10,12 +10,19 @@ import UIKit
 class FeedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        
+        // Устанавливаем мятный цвет фона
+        view.backgroundColor = UIColor.systemMint
+        
         title = "Feed"
 
-        // Добавляем кнопку для перехода на PostViewController
+        // Создаем кнопку для перехода на PostViewController
         let postButton = UIButton(type: .system)
         postButton.setTitle("Open Post", for: .normal)
+        postButton.setTitleColor(.white, for: .normal)
+        postButton.backgroundColor = .systemBlue
+        postButton.layer.cornerRadius = 10
+        postButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         postButton.addTarget(self, action: #selector(openPost), for: .touchUpInside)
         postButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(postButton)
@@ -23,7 +30,9 @@ class FeedViewController: UIViewController {
         // Устанавливаем ограничения для кнопки
         NSLayoutConstraint.activate([
             postButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            postButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            postButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            postButton.widthAnchor.constraint(equalToConstant: 150),
+            postButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 

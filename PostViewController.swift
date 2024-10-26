@@ -16,7 +16,9 @@ class PostViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        
+        // Устанавливаем мятный цвет фона
+        view.backgroundColor = UIColor.systemMint
         title = post?.title
 
         // Добавляем Bar Button Item
@@ -26,8 +28,8 @@ class PostViewController: UIViewController {
     
     @objc func showInfo() {
         let infoVC = InfoViewController()
-        infoVC.modalPresentationStyle = .fullScreen
+        // Устанавливаем стиль модального представления на pageSheet
+        infoVC.modalPresentationStyle = .pageSheet
         present(infoVC, animated: true, completion: nil)
     }
 }
-
