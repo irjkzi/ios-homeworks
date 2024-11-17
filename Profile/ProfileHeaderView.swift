@@ -18,7 +18,6 @@ class ProfileHeaderView: UIView {
         imageView.layer.borderWidth = 3
         imageView.layer.borderColor = UIColor.white.cgColor
         imageView.image = UIImage(named: "Alba") // Изображение
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
 
@@ -29,7 +28,6 @@ class ProfileHeaderView: UIView {
         label.textColor = .black
         label.text = "Alba" // Имя
         label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
@@ -40,14 +38,27 @@ class ProfileHeaderView: UIView {
         label.textColor = .gray
         label.text = "Waiting for something..." // Текст статуса
         label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+
+    // Создаем текстовое поле
+    let statusTextField: UITextField = {
+        let textField = UITextField()
+        textField.borderStyle = .roundedRect
+        textField.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        textField.textColor = .black
+        textField.backgroundColor = .white
+        textField.layer.cornerRadius = 12
+        textField.layer.borderWidth = 1
+        textField.layer.borderColor = UIColor.black.cgColor
+        textField.placeholder = "Enter your status..."
+        return textField
     }()
 
     // Создаем кнопку
     let statusButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Show status", for: .normal)
+        button.setTitle("Set status", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 4
@@ -55,13 +66,13 @@ class ProfileHeaderView: UIView {
         button.layer.shadowOffset = CGSize(width: 4, height: 4)
         button.layer.shadowOpacity = 0.7
         button.layer.shadowRadius = 4
-        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
     // Обработчик для кнопки
     @objc private func buttonPressed() {
-        print(statusLabel.text ?? "Нет статуса")
+        // Устанавливаем текст из textField в statusLabel
+        statusLabel.text = statusTextField.text
     }
 
     // Настраиваем представления
@@ -69,6 +80,7 @@ class ProfileHeaderView: UIView {
         addSubview(avatarImageView)
         addSubview(fullNameLabel)
         addSubview(statusLabel)
+        addSubview(statusTextField)
         addSubview(statusButton)
 
         // Добавляем обработчик нажатия для кнопки
@@ -102,26 +114,35 @@ class ProfileHeaderView: UIView {
 
         // Фрейм для имени
         fullNameLabel.frame = CGRect(
-            x: avatarImageView.frame.maxX + padding,
-            y: avatarImageView.frame.minY,
-            width: bounds.width - avatarImageView.frame.maxX - 2 * padding,
+            x: avatarImageView.frame.maxX + 27,
+            y: avatarImageView.frame.minY + 16,
+            width: bounds.width - avatarImageView.frame.maxX - padding - 27,
             height: 22
         )
 
         // Фрейм для статуса
         statusLabel.frame = CGRect(
-            x: avatarImageView.frame.maxX + padding,
+            x: avatarImageView.frame.maxX + 27,
             y: fullNameLabel.frame.maxY + 8,
-            width: bounds.width - avatarImageView.frame.maxX - 2 * padding,
+            width: bounds.width - avatarImageView.frame.maxX - padding - 27,
             height: 20
+        )
+
+        // Фрейм для текстового поля
+        statusTextField.frame = CGRect(
+            x: padding,
+            y: avatarImageView.frame.maxY + 16,
+            width: bounds.width - 2 * padding,
+            height: 40
         )
 
         // Фрейм для кнопки
         statusButton.frame = CGRect(
             x: padding,
-            y: avatarImageView.frame.maxY + 34,
+            y: statusTextField.frame.maxY + 34,
             width: bounds.width - 2 * padding,
             height: 50
         )
     }
+
 }
