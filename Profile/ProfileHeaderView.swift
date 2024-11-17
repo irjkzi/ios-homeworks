@@ -9,6 +9,9 @@ import UIKit
 
 class ProfileHeaderView: UIView {
     
+    // Приватная переменная для хранения текста статуса
+    private var statusText: String = ""
+    
     // Создаем аватар
     let avatarImageView: UIImageView = {
         let imageView = UIImageView()
@@ -61,8 +64,6 @@ class ProfileHeaderView: UIView {
 
         return textField
     }()
-
-
     
     // Создаем кнопку
     let statusButton: UIButton = {
@@ -80,8 +81,16 @@ class ProfileHeaderView: UIView {
     
     // Обработчик для кнопки
     @objc private func buttonPressed() {
-        // Устанавливаем текст из textField в statusLabel
-        statusLabel.text = statusTextField.text
+        // Устанавливаем текст из переменной в статус
+        statusLabel.text = statusText
+        // Выводим текст статуса в консоль
+           print("Current status: \(statusText)")
+    }
+    
+    // Обработчик изменения текста
+    @objc private func statusTextChanged(_ textField: UITextField) {
+        // Записываем текст в переменную
+        statusText = textField.text ?? ""
     }
     
     // Настраиваем представления
@@ -94,6 +103,9 @@ class ProfileHeaderView: UIView {
         
         // Добавляем обработчик нажатия для кнопки
         statusButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        
+        // Добавляем обработчик изменения текста для текстового поля
+        statusTextField.addTarget(self, action: #selector(statusTextChanged(_:)), for: .editingChanged)
     }
     
     // Конструктор
@@ -154,5 +166,4 @@ class ProfileHeaderView: UIView {
             height: 50
         )
     }
-
 }
