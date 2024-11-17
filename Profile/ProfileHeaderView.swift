@@ -56,12 +56,12 @@ class ProfileHeaderView: UIView {
         textField.layer.borderColor = UIColor.black.cgColor // Цвет рамки
         textField.clipsToBounds = true // Обрезаем содержимое, выходящее за границы
         textField.placeholder = "Enter your status..."
-
+        
         // Добавляем отступ для текста
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 40)) // 12 pt отступ
         textField.leftView = paddingView
         textField.leftViewMode = .always
-
+        
         return textField
     }()
     
@@ -84,7 +84,7 @@ class ProfileHeaderView: UIView {
         // Устанавливаем текст из переменной в статус
         statusLabel.text = statusText
         // Выводим текст статуса в консоль
-           print("Current status: \(statusText)")
+        print("Current status: \(statusText)")
     }
     
     // Обработчик изменения текста
@@ -121,11 +121,11 @@ class ProfileHeaderView: UIView {
     // Устанавливаем фреймы элементов
     override func layoutSubviews() {
         super.layoutSubviews()
-
+        
         let safeAreaTop = safeAreaInsets.top // Учитываем отступ сверху
         let padding: CGFloat = 16
-        let leftIndent: CGFloat = avatarImageView.frame.maxX + 27 // Левый отступ для всех элементов справа от аватара
-
+        let leftIndent: CGFloat = avatarImageView.frame.maxX + 27 // Левый отступ для всех текстовых элементов справа от аватара
+        
         // Фрейм для аватара
         avatarImageView.frame = CGRect(
             x: padding,
@@ -133,35 +133,41 @@ class ProfileHeaderView: UIView {
             width: 100,
             height: 100
         )
-
-        // Фрейм для имени
+        
+        // Фрейм для имени (фиксируем на 27 pt от навбара)
         fullNameLabel.frame = CGRect(
             x: leftIndent,
-            y: avatarImageView.frame.minY,
+            y: safeAreaTop + 27, // Фиксированный отступ 27 pt от навбара
             width: bounds.width - leftIndent - padding,
             height: 22
         )
-
-        // Фрейм для статуса
+        
+        // Центр аватара по вертикали
+        let avatarCenterY = avatarImageView.frame.midY
+        
+        // Расчёт смещения имени от центра аватара
+        let nameOffsetFromCenter = fullNameLabel.frame.minY - avatarCenterY
+        
+        // Фрейм для статуса (симметрично имени относительно центра аватара)
         statusLabel.frame = CGRect(
             x: leftIndent,
-            y: fullNameLabel.frame.maxY + 27, // Отступ от имени — 27 pt
+            y: avatarCenterY - nameOffsetFromCenter - 20, // Учитываем высоту статуса
             width: bounds.width - leftIndent - padding,
             height: 20
         )
-
-        // Фрейм для текстового поля
+        
+        // Фрейм для текстового поля (левый край совпадает с левым краем статуса)
         statusTextField.frame = CGRect(
-            x: leftIndent,
+            x: leftIndent, // Левый край на уровне левого края статуса
             y: statusLabel.frame.maxY + 8, // Отступ от статуса — 8 pt
             width: bounds.width - leftIndent - padding,
             height: 40 // Высота текстового поля
         )
-
+        
         // Фрейм для кнопки
         statusButton.frame = CGRect(
             x: padding,
-            y: statusTextField.frame.maxY + 34, // Отступ от текстового поля — 34 pt
+            y: statusTextField.frame.maxY + 16, // Отступ от текстового поля — 34 pt
             width: bounds.width - 2 * padding,
             height: 50
         )
