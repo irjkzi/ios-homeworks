@@ -27,7 +27,7 @@ class ProfileHeaderView: UIView {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         label.textColor = .black
-        label.text = "Alba"
+        label.text = "Alba" // Имя
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -38,7 +38,7 @@ class ProfileHeaderView: UIView {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         label.textColor = .gray
-        label.text = "Waiting for something..."
+        label.text = "Waiting for something..." // Текст статуса
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -59,6 +59,22 @@ class ProfileHeaderView: UIView {
         return button
     }()
 
+    // Обработчик для кнопки
+    @objc private func buttonPressed() {
+        print(statusLabel.text ?? "Нет статуса")
+    }
+
+    // Настраиваем представления
+    private func setupViews() {
+        addSubview(avatarImageView)
+        addSubview(fullNameLabel)
+        addSubview(statusLabel)
+        addSubview(statusButton)
+
+        // Добавляем обработчик нажатия для кнопки
+        statusButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+    }
+
     // Конструктор
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -69,14 +85,6 @@ class ProfileHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // Добавляем элементы на экран
-    private func setupViews() {
-        addSubview(avatarImageView)
-        addSubview(fullNameLabel)
-        addSubview(statusLabel)
-        addSubview(statusButton)
-    }
-
     // Устанавливаем фреймы элементов
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -84,7 +92,7 @@ class ProfileHeaderView: UIView {
         let safeAreaTop = safeAreaInsets.top // Учитываем отступ сверху
         let padding: CGFloat = 16
 
-        // Устанавливаем фрейм для аватарки
+        // Фрейм для аватара
         avatarImageView.frame = CGRect(
             x: padding,
             y: safeAreaTop + padding,
@@ -92,7 +100,7 @@ class ProfileHeaderView: UIView {
             height: 100
         )
 
-        // Устанавливаем фрейм для имени
+        // Фрейм для имени
         fullNameLabel.frame = CGRect(
             x: avatarImageView.frame.maxX + padding,
             y: avatarImageView.frame.minY,
@@ -100,7 +108,7 @@ class ProfileHeaderView: UIView {
             height: 22
         )
 
-        // Устанавливаем фрейм для статуса
+        // Фрейм для статуса
         statusLabel.frame = CGRect(
             x: avatarImageView.frame.maxX + padding,
             y: fullNameLabel.frame.maxY + 8,
@@ -108,7 +116,7 @@ class ProfileHeaderView: UIView {
             height: 20
         )
 
-        // Устанавливаем фрейм для кнопки
+        // Фрейм для кнопки
         statusButton.frame = CGRect(
             x: padding,
             y: avatarImageView.frame.maxY + 34,
