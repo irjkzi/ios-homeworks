@@ -3,7 +3,22 @@ import UIKit
 class ProfileViewController: UIViewController {
 
     // Создаём экземпляр ProfileHeaderView
-    private let headerView = ProfileHeaderView()
+    private let headerView: ProfileHeaderView = {
+        let view = ProfileHeaderView()
+        view.translatesAutoresizingMaskIntoConstraints = false // Включаем Auto Layout
+        return view
+    }()
+
+    // Создаём новую кнопку
+    private let newButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("New Button", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .systemBlue
+        button.layer.cornerRadius = 10
+        return button
+    }()
 
     // Настройка цвета статус-бара
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -31,14 +46,31 @@ class ProfileViewController: UIViewController {
             navigationController?.navigationBar.compactAppearance = appearance
         }
 
-        // Добавляем headerView как subview
+        // Добавляем элементы на экран
         view.addSubview(headerView)
+        view.addSubview(newButton)
+
+        // Настраиваем Auto Layout
+        setupConstraints()
     }
 
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
+    // Устанавливаем Auto Layout Constraints
+    private func setupConstraints() {
+        // Constraints для headerView
+        NSLayoutConstraint.activate([
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: 220) // Высота headerView фиксированная
+        ])
 
-        // Задаём frame для headerView
-        headerView.frame = view.bounds
+        // Constraints для новой кнопки
+        NSLayoutConstraint.activate([
+            newButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            newButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            newButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            newButton.heightAnchor.constraint(equalToConstant: 50) // Высота кнопки фиксированная
+        ])
     }
 }
+
