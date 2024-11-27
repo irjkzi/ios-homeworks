@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Создаем контроллеры Feed и Profile
         let feedVC = FeedViewController()
-        let profileVC = ProfileViewController()
+        let profileVC = LogInViewController()
 
         // Создаем UINavigationController для каждого контроллера
         let feedNavController = UINavigationController(rootViewController: feedVC)
