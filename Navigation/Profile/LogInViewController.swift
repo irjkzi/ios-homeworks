@@ -5,6 +5,7 @@ class LogInViewController: UIViewController {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
 
+    // Логотип приложения
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "VKLogo")
@@ -14,6 +15,7 @@ class LogInViewController: UIViewController {
         return imageView
     }()
 
+    // Поле для ввода email или телефона
     private let emailTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Email or phone"
@@ -23,9 +25,15 @@ class LogInViewController: UIViewController {
         textField.autocapitalizationType = .none
         textField.returnKeyType = .next
         textField.clipsToBounds = true
+
+        // Добавление стандартных отступов для текста
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 40))
+        textField.leftView = paddingView
+        textField.leftViewMode = .always
         return textField
     }()
 
+    // Поле для ввода пароля
     private let passwordTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Password"
@@ -35,9 +43,15 @@ class LogInViewController: UIViewController {
         textField.isSecureTextEntry = true
         textField.returnKeyType = .done
         textField.clipsToBounds = true
+
+        // Добавление стандартных отступов для текста
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 40))
+        textField.leftView = paddingView
+        textField.leftViewMode = .always
         return textField
     }()
 
+    // Кнопка входа
     private let logInButton: UIButton = {
         let button = UIButton()
         button.setTitle("Log In", for: .normal)
@@ -49,13 +63,14 @@ class LogInViewController: UIViewController {
         return button
     }()
 
+    // Разделитель между текстовыми полями
     private let dividerView: UIView = {
         let view = UIView()
         view.backgroundColor = .lightGray
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
 
+    // Стек с текстовыми полями
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [emailTextField, dividerView, passwordTextField])
         stackView.axis = .vertical
@@ -69,6 +84,7 @@ class LogInViewController: UIViewController {
         return stackView
     }()
 
+    // MARK: - Жизненный цикл ViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -77,47 +93,78 @@ class LogInViewController: UIViewController {
         passwordTextField.delegate = self
     }
 
-    private func setupUI() {
-        view.backgroundColor = .white
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
+    // MARK: - Настройка интерфейса
 
+    private func setupUI() {
+        setupBackground()
+        setupScrollView()
+        setupContentView()
+        setupSubviews()
+        setupConstraints()
+    }
+
+    // Установка фонового цвета
+    private func setupBackground() {
+        view.backgroundColor = .white
+    }
+
+    // Настройка scrollView
+    private func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+    }
+
+    // Настройка contentView внутри scrollView
+    private func setupContentView() {
+        scrollView.addSubview(contentView)
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+    }
+
+    // Добавление всех сабвью
+    private func setupSubviews() {
         contentView.addSubview(logoImageView)
         contentView.addSubview(stackView)
         contentView.addSubview(logInButton)
 
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.translatesAutoresizingMaskIntoConstraints = false
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
         logInButton.translatesAutoresizingMaskIntoConstraints = false
+        dividerView.translatesAutoresizingMaskIntoConstraints = false
+    }
 
+    // Установка всех ограничений
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
+            // ScrollView constraints
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
+            // ContentView constraints
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
 
+            // Logo constraints
             logoImageView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 120),
             logoImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             logoImageView.widthAnchor.constraint(equalToConstant: 100),
             logoImageView.heightAnchor.constraint(equalToConstant: 100),
 
+            // StackView constraints
             stackView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 120),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            stackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 100),
 
+            // Divider constraints
             dividerView.heightAnchor.constraint(equalToConstant: 0.5),
             dividerView.widthAnchor.constraint(equalTo: stackView.widthAnchor),
 
-            stackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 100),
-
+            // Button constraints
             logInButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 16),
             logInButton.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             logInButton.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
@@ -125,6 +172,8 @@ class LogInViewController: UIViewController {
             logInButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
     }
+
+    // MARK: - Действия
 
     private func setupActions() {
         logInButton.addTarget(self, action: #selector(logInTapped), for: .touchUpInside)
@@ -136,7 +185,7 @@ class LogInViewController: UIViewController {
         navigationController?.pushViewController(profileVC, animated: true)
     }
 
-
+    // Удаление наблюдателей уведомлений
     deinit {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
