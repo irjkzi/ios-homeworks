@@ -21,9 +21,8 @@ class LogInViewController: UIViewController {
         textField.backgroundColor = .systemGray6
         textField.font = UIFont.systemFont(ofSize: 16)
         textField.autocapitalizationType = .none
-        textField.layer.cornerRadius = 0
+        textField.returnKeyType = .next
         textField.clipsToBounds = true
-        textField.returnKeyType = .next  // Переход к следующему полю
         return textField
     }()
 
@@ -34,9 +33,8 @@ class LogInViewController: UIViewController {
         textField.backgroundColor = .systemGray6
         textField.font = UIFont.systemFont(ofSize: 16)
         textField.isSecureTextEntry = true
-        textField.layer.cornerRadius = 0
+        textField.returnKeyType = .done
         textField.clipsToBounds = true
-        textField.returnKeyType = .done  // Кнопка DONE на клавиатуре
         return textField
     }()
 
@@ -58,12 +56,23 @@ class LogInViewController: UIViewController {
         return view
     }()
 
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [emailTextField, dividerView, passwordTextField])
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        stackView.alignment = .fill
+        stackView.distribution = .fillProportionally
+        stackView.layer.cornerRadius = 10
+        stackView.layer.masksToBounds = true
+        stackView.layer.borderColor = UIColor.lightGray.cgColor
+        stackView.layer.borderWidth = 0.5
+        return stackView
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupActions()
-
-        // Настроим делегаты для текстовых полей
         emailTextField.delegate = self
         passwordTextField.delegate = self
     }
@@ -72,15 +81,6 @@ class LogInViewController: UIViewController {
         view.backgroundColor = .white
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-
-        let stackView = UIStackView(arrangedSubviews: [emailTextField, dividerView, passwordTextField])
-        stackView.axis = .vertical
-        stackView.spacing = 0
-        stackView.alignment = .fill
-        stackView.distribution = .fillProportionally
-        stackView.layer.cornerRadius = 10
-        stackView.layer.masksToBounds = true
-        stackView.translatesAutoresizingMaskIntoConstraints = false
 
         contentView.addSubview(logoImageView)
         contentView.addSubview(stackView)
@@ -101,8 +101,8 @@ class LogInViewController: UIViewController {
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
 
             logoImageView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 120),
             logoImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
@@ -131,9 +131,11 @@ class LogInViewController: UIViewController {
     }
 
     @objc private func logInTapped() {
+        print("Log In button tapped")
         let profileVC = ProfileViewController()
         navigationController?.pushViewController(profileVC, animated: true)
     }
+
 
     deinit {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -144,16 +146,12 @@ class LogInViewController: UIViewController {
 // MARK: - UITextFieldDelegate
 
 extension LogInViewController: UITextFieldDelegate {
-
-    // Когда нажимаем return на клавиатуре — переходим к следующему полю или скрываем клавиатуру
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == emailTextField {
-            // Переходим к полю пароля
             passwordTextField.becomeFirstResponder()
         } else if textField == passwordTextField {
-            // Скрываем клавиатуру
             passwordTextField.resignFirstResponder()
-            logInTapped()  // Переход на следующий экран
+            logInTapped()
         }
         return true
     }
