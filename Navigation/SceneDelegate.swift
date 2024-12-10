@@ -12,27 +12,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        // Проверяем, что `scene` является экземпляром UIWindowScene
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        // Создаем окно для приложения
+        // Создаём окно для отображения интерфейса
         window = UIWindow(windowScene: windowScene)
 
-        // Создаем TabBarController
+        // Создаём TabBarController
         let tabBarController = UITabBarController()
 
-        // Создаем контроллеры Feed и Profile
-        let feedVC = FeedViewController()
-        let profileVC = ProfileViewController()
+        // Создаём экземпляры контроллеров Feed и Profile
+        let feedVC = FeedViewController() // Экран ленты
+        let profileVC = LogInViewController() // Экран авторизации
 
-        // Создаем UINavigationController для каждого контроллера
+        // Оборачиваем контроллеры в UINavigationController
         let feedNavController = UINavigationController(rootViewController: feedVC)
         let profileNavController = UINavigationController(rootViewController: profileVC)
 
-        // Настраиваем Tab Bar Items для контроллеров
+        // Настраиваем элементы таб-бара для каждого контроллера
         feedNavController.tabBarItem = UITabBarItem(
-            title: "Feed",
-            image: UIImage(systemName: "list.bullet"),
-            tag: 0
+            title: "Feed", // Название вкладки
+            image: UIImage(systemName: "list.bullet"), // Иконка
+            tag: 0 // Индекс вкладки
         )
         profileNavController.tabBarItem = UITabBarItem(
             title: "Profile",
@@ -40,66 +41,58 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             tag: 1
         )
 
-        // Настраиваем внешний вид TabBar
+        // Настройка внешнего вида TabBar
         let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.configureWithOpaqueBackground()
         tabBarAppearance.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1.0) // Светло-серый фон
 
-        // Настраиваем цвета для активных и неактивных элементов
+        // Настройка цветов для активных и неактивных элементов
         let activeColor = UIColor(red: 139/255, green: 0/255, blue: 0/255, alpha: 1.0) // Бордовый
-        let inactiveColor = UIColor(red: 105/255, green: 105/255, blue: 105/255, alpha: 1.0) // Темно-серый
+        let inactiveColor = UIColor(red: 105/255, green: 105/255, blue: 105/255, alpha: 1.0) // Тёмно-серый
 
-        // Устанавливаем цвет для неактивных и активных элементов
-        tabBarAppearance.stackedLayoutAppearance.normal.iconColor = inactiveColor
-        tabBarAppearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: inactiveColor]
-        tabBarAppearance.stackedLayoutAppearance.selected.iconColor = activeColor
-        tabBarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: activeColor]
+        tabBarAppearance.stackedLayoutAppearance.normal.iconColor = inactiveColor // Цвет иконок в неактивном состоянии
+        tabBarAppearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: inactiveColor] // Цвет текста
+        tabBarAppearance.stackedLayoutAppearance.selected.iconColor = activeColor // Цвет иконок в активном состоянии
+        tabBarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: activeColor] // Цвет текста
 
-        // Применяем изменения к таб-бару
+        // Применяем изменения к TabBar
         tabBarController.tabBar.standardAppearance = tabBarAppearance
         if #available(iOS 15.0, *) {
-            tabBarController.tabBar.scrollEdgeAppearance = tabBarAppearance
+            tabBarController.tabBar.scrollEdgeAppearance = tabBarAppearance // Для iOS 15 и выше
         }
 
-        // Добавляем контроллеры в TabBarController
+        // Устанавливаем контроллеры TabBarController
         tabBarController.viewControllers = [feedNavController, profileNavController]
 
-        // Устанавливаем rootViewController для окна
+        // Устанавливаем TabBarController как rootViewController
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
     }
-}
 
-
+    // MARK: - Методы жизненного цикла сцены
 
     func sceneDidDisconnect(_ scene: UIScene) {
-        // Called as the scene is being released by the system.
-        // This occurs shortly after the scene enters the background, or when its session is discarded.
-        // Release any resources associated with this scene that can be re-created the next time the scene connects.
-        // The scene may re-connect later, as its session was not necessarily discarded (see `application:didDiscardSceneSessions` instead).
+        // Вызывается, когда сцена отключается системой.
+        // Используется для очистки ресурсов, связанных с этой сценой.
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
-        // Called when the scene has moved from an inactive state to an active state.
-        // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        // Вызывается, когда сцена переходит из неактивного состояния в активное.
+        // Здесь можно перезапустить задачи, которые были приостановлены.
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
-        // Called when the scene will move from an active state to an inactive state.
-        // This may occur due to temporary interruptions (ex. an incoming phone call).
+        // Вызывается, когда сцена переходит из активного состояния в неактивное.
+        // Например, при входящем звонке.
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        // Called as the scene transitions from the background to the foreground.
-        // Use this method to undo the changes made on entering the background.
+        // Вызывается, когда сцена возвращается из фона в передний план.
+        // Используется для отмены изменений, выполненных при уходе в фон.
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
-        // Called as the scene transitions from the foreground to the background.
-        // Use this method to save data, release shared resources, and store enough scene-specific state information
-        // to restore the scene back to its current state.
+        // Вызывается, когда сцена переходит из переднего плана в фон.
+        // Используется для сохранения данных и освобождения ресурсов.
     }
-
-
-
-
+}

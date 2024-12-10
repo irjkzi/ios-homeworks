@@ -2,75 +2,80 @@ import UIKit
 
 class ProfileViewController: UIViewController {
 
-    // Создаём экземпляр ProfileHeaderView
-    private let headerView: ProfileHeaderView = {
-        let view = ProfileHeaderView()
-        view.translatesAutoresizingMaskIntoConstraints = false // Включаем Auto Layout
-        return view
-    }()
-
-    // Создаём новую кнопку
-    private let newButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("New Button", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 10
-        return button
-    }()
-
-    // Настройка цвета статус-бара
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent // Темный текст на светлом фоне
-    }
+    // Таблица для отображения постов с группированным стилем
+    private let tableView = UITableView(frame: .zero, style: .grouped)
+    // Массив постов для отображения в таблице
+    private let posts = Post.samplePosts
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .lightGray
-        title = "Profile"
-
-        // Настройка appearance для навигационного бара
-        let appearance = UINavigationBarAppearance()
-        appearance.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1) // Цвет #F3F3F3
-        appearance.titleTextAttributes = [
-            .foregroundColor: UIColor.black, // Чёрный цвет текста
-            .font: UIFont.systemFont(ofSize: 20, weight: .bold) // Жирный шрифт заголовка
-        ]
-
-        navigationController?.navigationBar.standardAppearance = appearance
-        navigationController?.navigationBar.scrollEdgeAppearance = appearance
-
-        // Устанавливаем фон statusBar
-        if #available(iOS 15, *) {
-            navigationController?.navigationBar.compactAppearance = appearance
-        }
-
-        // Добавляем элементы на экран
-        view.addSubview(headerView)
-        view.addSubview(newButton)
-
-        // Настраиваем Auto Layout
-        setupConstraints()
+        // Устанавливаем белый фон экрана
+        view.backgroundColor = .white
+        setupTableView()
     }
 
-    // Устанавливаем Auto Layout Constraints
-    private func setupConstraints() {
-        // Constraints для headerView
-        NSLayoutConstraint.activate([
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 220) // Высота headerView фиксированная
-        ])
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Убираем кнопку "Назад"
+        navigationItem.hidesBackButton = true
+    }
 
-        // Constraints для новой кнопки
+    // Настройка таблицы
+    private func setupTableView() {
+        // Назначаем делегата и источник данных
+        tableView.delegate = self
+        tableView.dataSource = self
+        // Настраиваем автоматическую адаптацию таблицы
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .white
+        tableView.contentInsetAdjustmentBehavior = .automatic
+        // Добавляем таблицу на экран
+        view.addSubview(tableView)
+
+        // Регистрируем ячейку для таблицы
+        tableView.register(PostTableViewCell.self, forCellReuseIdentifier: "PostCell")
+        // Устанавливаем ограничения для таблицы
+        setupTableViewConstraints()
+    }
+
+    // Установка ограничений для таблицы
+    private func setupTableViewConstraints() {
         NSLayoutConstraint.activate([
-            newButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            newButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            newButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            newButton.heightAnchor.constraint(equalToConstant: 50) // Высота кнопки фиксированная
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 }
 
+extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
+    // Возвращаем количество строк в таблице
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return posts.count
+    }
+
+    // Настраиваем содержимое ячейки для строки
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as? PostTableViewCell else {
+            return UITableViewCell()
+        }
+        cell.configure(with: posts[indexPath.row])
+        return cell
+    }
+
+    // Устанавливаем высоту заголовка секции
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return section == 0 ? 200 : 0
+    }
+
+    // Настраиваем отображение заголовка секции
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 0 {
+            let headerView = ProfileHeaderView()
+            headerView.backgroundColor = .white
+            return headerView
+        }
+        return nil
+    }
+}

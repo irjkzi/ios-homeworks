@@ -7,29 +7,49 @@
 
 import UIKit
 
-struct Post {
-    let title: String
+// Модель для представления простого поста
+struct SimplePost {
+    let title: String // Заголовок поста
 }
 
+// Контроллер для отображения поста
 class PostViewController: UIViewController {
-    var post: Post?
+    
+    // Переменная для хранения текущего поста
+    var post: SimplePost?
 
+    // MARK: - Жизненный цикл ViewController
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Устанавливаем мятный цвет фона
+        // Устанавливаем цвет фона
         view.backgroundColor = UIColor.systemMint
+        
+        // Устанавливаем заголовок экрана (если он есть в модели)
         title = post?.title
-
-        // Добавляем Bar Button Item
-        let infoButton = UIBarButtonItem(title: "Info", style: .plain, target: self, action: #selector(showInfo))
+        
+        // Создаём кнопку "Info" в правой части навигационной панели
+        let infoButton = UIBarButtonItem(
+            title: "Info",
+            style: .plain,
+            target: self,
+            action: #selector(showInfo) // Метод, вызываемый при нажатии
+        )
         navigationItem.rightBarButtonItem = infoButton
     }
     
+    // MARK: - Действия
+    
+    // Метод для отображения экрана "Info"
     @objc func showInfo() {
+        // Создаём экземпляр InfoViewController
         let infoVC = InfoViewController()
-        // Устанавливаем стиль модального представления на pageSheet
+        
+        // Устанавливаем стиль модального представления на "pageSheet"
         infoVC.modalPresentationStyle = .pageSheet
+        
+        // Переход на экран Info
         present(infoVC, animated: true, completion: nil)
     }
 }

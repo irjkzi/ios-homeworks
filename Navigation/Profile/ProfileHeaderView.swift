@@ -1,149 +1,151 @@
-//
-//  ProfileHeaderView.swift
-//  Navigation
-//
-//  Created by Николай Иванов on 17.11.2024.
-//
-
 import UIKit
 
 class ProfileHeaderView: UIView {
-
+    
+    // Строка для хранения статуса, введённого пользователем
     private var statusText: String = ""
 
-    // Создаем аватар
+    // Аватар пользователя
     private let avatarImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.layer.cornerRadius = 50 // Закругляем
-        imageView.clipsToBounds = true
-        imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderWidth = 3
+        imageView.layer.cornerRadius = ProfileHeaderConstants.avatarSize / 2 // Закругляем до круга
+        imageView.clipsToBounds = true // Обрезаем по границам
+        imageView.contentMode = .scaleAspectFill // Заполняем изображением, сохраняя пропорции
+        imageView.layer.borderWidth = 3 // Белая рамка вокруг аватара
         imageView.layer.borderColor = UIColor.white.cgColor
-        imageView.image = UIImage(named: "Alba") // Указываем изображение
+        imageView.image = UIImage(named: "Alba") // Тестовое изображение
         return imageView
     }()
 
-    // Создаем метку для имени
+    // Полное имя пользователя
     private let fullNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        label.textColor = .black
-        label.text = "Alba"
-        label.numberOfLines = 1
+        label.font = UIFont.systemFont(ofSize: 18, weight: .bold) // Полужирный текст
+        label.textColor = .black // Чёрный цвет
+        label.text = "Alba" // Имя пользователя
+        label.numberOfLines = 1 // Одна строка текста
         return label
     }()
 
-    // Создаем метку для статуса
+    // Лейбл для отображения текущего статуса
     private let statusLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        label.textColor = .gray
-        label.text = "Waiting for something..."
-        label.numberOfLines = 1
+        label.font = UIFont.systemFont(ofSize: 14, weight: .regular) // Обычный текст
+        label.textColor = .gray // Серый цвет текста
+        label.text = "Waiting for something..." // Начальный текст статуса
+        label.numberOfLines = 1 // Одна строка
         return label
     }()
 
-    // Создаем текстовое поле
+    // Текстовое поле для ввода нового статуса
     private let statusTextField: UITextField = {
         let textField = UITextField()
-        textField.borderStyle = .none
-        textField.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        textField.textColor = .black
-        textField.backgroundColor = .white
-        textField.layer.cornerRadius = 12
-        textField.layer.borderWidth = 1
+        textField.borderStyle = .none // Без рамки
+        textField.font = UIFont.systemFont(ofSize: 15, weight: .regular) // Обычный шрифт
+        textField.textColor = .black // Чёрный текст
+        textField.backgroundColor = .white // Белый фон
+        textField.layer.cornerRadius = ProfileHeaderConstants.cornerRadius
+        textField.layer.borderWidth = 1 // Чёрная рамка
         textField.layer.borderColor = UIColor.black.cgColor
-        textField.placeholder = "Enter your status..."
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 40))
+        textField.placeholder = "Enter your status..." // Подсказка внутри поля
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 40)) // Отступы слева
         textField.leftView = paddingView
         textField.leftViewMode = .always
         return textField
     }()
 
-    // Создаем кнопку
+    // Кнопка для сохранения статуса
     private let setStatusButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Set status", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 4
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOffset = CGSize(width: 4, height: 4)
-        button.layer.shadowOpacity = 0.7
-        button.layer.shadowRadius = 4
+        button.setTitle("Set status", for: .normal) // Текст на кнопке
+        button.setTitleColor(.white, for: .normal) // Белый текст
+        button.backgroundColor = .systemBlue // Синий фон
+        button.layer.cornerRadius = ProfileHeaderConstants.cornerRadius
+        button.layer.shadowColor = UIColor.black.cgColor // Чёрная тень
+        button.layer.shadowOffset = ProfileHeaderConstants.buttonShadowOffset
+        button.layer.shadowOpacity = ProfileHeaderConstants.shadowOpacity
+        button.layer.shadowRadius = ProfileHeaderConstants.shadowRadius
         return button
     }()
 
-    // Настраиваем обработчики
+    // Обработчик нажатия кнопки "Set status"
     @objc private func buttonPressed() {
-        statusLabel.text = statusText
-        print("Current status: \(statusText)")
+        statusLabel.text = statusText // Устанавливаем новый статус в лейбл
+        print("Current status: \(statusText)") // Печатаем статус в консоль
     }
 
+    // Обработчик изменения текста в текстовом поле
     @objc private func statusTextChanged(_ textField: UITextField) {
-        statusText = textField.text ?? ""
+        statusText = textField.text ?? "" // Сохраняем текст из текстового поля
     }
 
-    // Конструктор
+    // Конструктор, вызывается при создании в коде
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupViews()
-        setupConstraints()
+        backgroundColor = .white // Белый фон заголовка
+        addSubviews() // Добавляем все элементы на экран
+        setupTargets() // Настраиваем обработчики
+        setupConstraints() // Устанавливаем Auto Layout
     }
 
+    // Конструктор для инициализации из Interface Builder
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError("init(coder:) has not been implemented") // Не используется
     }
 
-    // Настраиваем subviews
-    private func setupViews() {
+    // Метод для добавления всех subview
+    private func addSubviews() {
         addSubview(avatarImageView)
         addSubview(fullNameLabel)
         addSubview(statusLabel)
         addSubview(statusTextField)
         addSubview(setStatusButton)
-
-        // Добавляем обработчики
-        setStatusButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
-        statusTextField.addTarget(self, action: #selector(statusTextChanged(_:)), for: .editingChanged)
     }
 
-    // Настраиваем Auto Layout
+    // Настраиваем обработчики для кнопки и текстового поля
+    private func setupTargets() {
+        setStatusButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside) // Нажатие кнопки
+        statusTextField.addTarget(self, action: #selector(statusTextChanged(_:)), for: .editingChanged) // Изменение текста
+    }
+
+    // Устанавливаем Auto Layout
     private func setupConstraints() {
+        // Отключаем автоматические ограничения
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
         fullNameLabel.translatesAutoresizingMaskIntoConstraints = false
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
         statusTextField.translatesAutoresizingMaskIntoConstraints = false
         setStatusButton.translatesAutoresizingMaskIntoConstraints = false
 
+        // Устанавливаем ограничения
         NSLayoutConstraint.activate([
             // Аватар
-            avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            avatarImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
-            avatarImageView.widthAnchor.constraint(equalToConstant: 100),
-            avatarImageView.heightAnchor.constraint(equalToConstant: 100),
+            avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ProfileHeaderConstants.padding),
+            avatarImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: ProfileHeaderConstants.padding),
+            avatarImageView.widthAnchor.constraint(equalToConstant: ProfileHeaderConstants.avatarSize),
+            avatarImageView.heightAnchor.constraint(equalToConstant: ProfileHeaderConstants.avatarSize),
 
-            // Имя
-            fullNameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 27),
-            fullNameLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 27),
-            fullNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            // Полное имя
+            fullNameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: ProfileHeaderConstants.labelToAvatarOffset),
+            fullNameLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: ProfileHeaderConstants.labelToAvatarOffset),
+            fullNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -ProfileHeaderConstants.padding),
 
-            // Статус
-            statusLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 27),
-            statusLabel.topAnchor.constraint(equalTo: fullNameLabel.bottomAnchor, constant: 8),
-            statusLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            // Лейбл статуса
+            statusLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: ProfileHeaderConstants.labelToAvatarOffset),
+            statusLabel.topAnchor.constraint(equalTo: fullNameLabel.bottomAnchor, constant: ProfileHeaderConstants.spacingBetweenLabels),
+            statusLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -ProfileHeaderConstants.padding),
 
             // Текстовое поле
             statusTextField.leadingAnchor.constraint(equalTo: statusLabel.leadingAnchor),
-            statusTextField.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 8),
-            statusTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            statusTextField.heightAnchor.constraint(equalToConstant: 40),
+            statusTextField.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: ProfileHeaderConstants.spacingBetweenLabels),
+            statusTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -ProfileHeaderConstants.padding),
+            statusTextField.heightAnchor.constraint(equalToConstant: ProfileHeaderConstants.textFieldHeight),
 
             // Кнопка
-            setStatusButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            setStatusButton.topAnchor.constraint(equalTo: statusTextField.bottomAnchor, constant: 16),
-            setStatusButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            setStatusButton.heightAnchor.constraint(equalToConstant: 50)
+            setStatusButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ProfileHeaderConstants.padding),
+            setStatusButton.topAnchor.constraint(equalTo: statusTextField.bottomAnchor, constant: ProfileHeaderConstants.padding),
+            setStatusButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -ProfileHeaderConstants.padding),
+            setStatusButton.heightAnchor.constraint(equalToConstant: ProfileHeaderConstants.buttonHeight)
         ])
     }
 }
